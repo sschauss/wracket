@@ -1,0 +1,29 @@
+<!doctype html>
+
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>wracket</title>
+    </head>
+    <body>
+        <script>
+            const n = 44;
+            function fetchAndInstantiate(url, importObject) {
+                return fetch(url).then(response =>
+	            response.arrayBuffer()
+                ).then(bytes =>
+                    WebAssembly.instantiate(bytes, importObject)
+                ).then(result =>
+                    result.instance
+                );
+            }
+            fetchAndInstantiate('main.wasm', {})
+	        .then(instance => {
+                    const start = new Date();		
+		    const result = instance.exports.main(n);
+		    const end = new Date();
+		    console.log(`${result} (${end.getTime() - start.getTime()}ms)`);
+		});
+        </script>
+    </body>
+</html>
